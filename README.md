@@ -1,3 +1,6 @@
+![banner-auto-rotating-nft](https://user-images.githubusercontent.com/3408362/174283301-16c309c5-f7cb-4c01-872c-144979b99658.png)
+
+
 # Experiment: Auto-Rotating NFT
 
 [![Coverage Status](https://coveralls.io/repos/github/friends-of-pooly/nft-auto-rotate-sol/badge.svg?branch=master)](https://coveralls.io/github/friends-of-pooly/nft-auto-rotate-sol?branch=master)
