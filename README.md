@@ -2,11 +2,37 @@
 
 # Experiment: Auto-Rotating NFT | Pooly "Magic" PFP
 
-The Auto-Rotating NFT a.k.a Pooly "Magic" PFP will be an automatically updating NFT to showcase FoP Artists.
+The Pooly "Magic" PFP bounty is an experiment to test auto-rotating NFT images using completely on-chain logic. It should be possible to automatically rotate to a different Artist submission after X amount of time has passed.
 
-**what:** auto-rotating profile picture <br/>
-**why:** showcase community artists <br/>
-**how:** on-chain ERC721 metadata generation  <br/>
+**What:** Auto-rotating profile picture
+
+**Why:** Showcase community artists
+
+**How:** On-chain ERC721 metadata generation
+
+**Example:** Every 7 days a new PFP submission will be used with no additional on-chain transaction. 
+
+**Submissions:** https://twitter.com/FriendsofPooly/status/1537767237028749315/photo/1
+
+# Overview
+
+The Auto-Rotating NFT experiment will test rotating on-chain NFT metadata descriptors.
+
+### Why
+
+Highlight Artist in the Friends of Pooly community.
+
+Experiment with the intersection of community Art and NFTs.
+
+The Friends of Pooly recently had a PFP contest. Several amazing artists contributed. It would be great to showcase these Artist.
+
+In short, the experiment is perfect for any **intermediate solidity developers** who want to level-up their skills and positively contribute to the Friends of Pooly community.
+
+### How
+
+NFTs can generate item `metadata` completely on-chain; compared to the more commonly IPFS or centralized server approach to store the information.
+
+By generating the NFT metadata on-chain it's possible to rotate the image using blocknumber and/or timestamps.
 
 ## Getting Involved
 
@@ -19,22 +45,6 @@ Experiments are an opportunity for the Friends of Pooly community to get involve
 [<img width="200px" src="https://user-images.githubusercontent.com/3408362/174302052-6757cf66-f454-4298-b150-2df023ab69e8.png"/>](https://discord.gg/fXJg8C3gd8)
 
 Contributors will be highlighted across the Friends of Pooly communication channels.
-
-# Overview
-
-The Auto-Rotating NFT experiment will test rotating on-chain NFT metadata descriptors.
-
-### Why
-
-The Friends of Pooly recently had a PFP contest. Several artists contributed art to the FoP assets collection. It would be great to showcase artist with contributions with a Friends of Pooly NFT that automatically rotates to a new artist submission.
-
-### How
-
-NFT can generate item `metadata` completely on-chain; compared to the more commonly IPFS or centralized server approach to store the information.
-
-By generating the NFT metadata on-chain it's possible to rotate the image using `blockNumber` or `timestamp`.
-
-Using this approach new FoP artists submissions can be automatically featured without requiring a transaction to update the blockchain.
 
 ### App Design Example
 
