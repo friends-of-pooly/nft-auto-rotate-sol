@@ -31,10 +31,19 @@ The app design below is a simple sketch of what the rotating UI could look like.
 The code snippets below provide a rough outline for having automatically rotating images in an NFT.
 
 ```sol
+function tokenURI(uint256 tokenId) public view override returns (string memory) {
+  return constructTokenURI(tokenId);
+}
+
 function constructTokenURI(uint256 _tokenId) public view returns (string memory) {
-  /// @dev A different image should be returned depending on the timestamp
-  ///      An array of IPFS hashes (or encoded on-chain SVGs) is stored.
-  string memory image = generateImagePath(_tokenId, block.timestamp);
+  string memory name = string(abi.encodePacked("Pooly Rotating"));
+  string memory description = string(abi.encodePacked("#", _tokenId.toString()));
+
+  /**
+   * The generateImage function could return a different image URI depending
+   * on the tokenId and blocknumber. A timestamp could also work.
+   */
+  string memory image = generateImage(_tokenId, block.number);
 
   return
     string(
@@ -44,10 +53,11 @@ function constructTokenURI(uint256 _tokenId) public view returns (string memory)
           bytes(
             abi.encodePacked(
               '{"name":"',
-              params.name,
+              name,
               '", "description":"',
-              params.description,
+              description,
               '", "image": "',
+              "data:image/svg+xml;base64,",
               image,
               '"}'
             )
@@ -56,6 +66,8 @@ function constructTokenURI(uint256 _tokenId) public view returns (string memory)
       )
     );
 }
+
+function generateImage(uint256 _tokenId, uint256 blockNumber) public view returns (string memory) {}
 
 ```
 

@@ -22,8 +22,5 @@ describe('AutoRotateNFT', () => {
     AutoRotateNFTContract = await exampleContractFactory.deploy();
   });
 
-  describe('callMeSometime()', () => {
-    
-  });
-
+  describe('callMeSometime()', () => {});
 });

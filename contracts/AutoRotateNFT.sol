@@ -1,4 +1,3 @@
-
 //SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.13;
 
@@ -7,8 +6,9 @@ import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { ERC721 } from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
 contract AutoRotateNFT is ERC721 {
-    using Strings for uint256;
-    uint256 private _currentId;
+  using Strings for uint256;
+  uint256 private _currentId;
+
   constructor() ERC721("PoolyRotate", "POOLY.R") {}
 
   /* ================================================================================ */
@@ -18,10 +18,6 @@ contract AutoRotateNFT is ERC721 {
     _mint(msg.sender, _currentId++);
   }
 
-  /**
-   * @notice A distinct Uniform Resource Identifier (URI) for a given asset.
-   * @dev See {IERC721Metadata-tokenURI}.
-   */
   function tokenURI(uint256 tokenId) public view override returns (string memory) {
     return constructTokenURI(tokenId);
   }
@@ -29,7 +25,12 @@ contract AutoRotateNFT is ERC721 {
   function constructTokenURI(uint256 _tokenId) public view returns (string memory) {
     string memory name = string(abi.encodePacked("Pooly Rotating"));
     string memory description = string(abi.encodePacked("#", _tokenId.toString()));
-    string memory image = generateImage(_tokenId);
+
+    /**
+     * The generateImage function could return a different image URI depending
+     * on the tokenId and blocknumber. A timestamp could also work.
+     */
+    string memory image = generateImage(_tokenId, block.number);
 
     return
       string(
@@ -53,6 +54,9 @@ contract AutoRotateNFT is ERC721 {
       );
   }
 
-  function generateImage(uint256 _tokenId) public view returns (string memory) {}
-
+  function generateImage(uint256 _tokenId, uint256 blockNumber)
+    public
+    view
+    returns (string memory)
+  {}
 }
