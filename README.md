@@ -23,13 +23,19 @@ By generating the NFT metadata on-chain it's possible to rotate the image using 
 
 Using this approach new FoP artists submissions can be automatically featured without requiring a transaction to update the blockchain.
 
-**Example**
+### App Design Example
+The app design below is a simple sketch of what the rotating UI could look like. Coding the user interface is not required right now, but is included as an example for what it might look like in the future.
+
+<img width="500px" src="https://user-images.githubusercontent.com/3408362/174283691-4758e4c5-87ea-47c6-90cc-4a5d43ea9ac8.png" />
+
+### Code Example:
+The code snippets below provide a rough outline for having automatically rotating images in an NFT.
 
 ```sol
 function constructTokenURI(uint256 _tokenId) public view returns (string memory) {
   /// @dev A different image should be returned depending on the timestamp
   ///      An array of IPFS hashes (or encoded on-chain SVGs) is stored.
-  string memory image = generateSVGImage(_tokenId, block.timestamp);
+  string memory image = generateImagePath(_tokenId, block.timestamp);
 
   return
     string(
@@ -51,7 +57,6 @@ function constructTokenURI(uint256 _tokenId) public view returns (string memory)
       )
     );
 }
-
 ```
 
 # Installation
