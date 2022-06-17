@@ -1,8 +1,24 @@
 ![banner-auto-rotating-nft](https://user-images.githubusercontent.com/3408362/174283301-16c309c5-f7cb-4c01-872c-144979b99658.png)
 
-# Experiment: Auto-Rotating NFT
+# Experiment: Auto-Rotating NFT | Pooly "Magic" PFP
 
-[![Coverage Status](https://coveralls.io/repos/github/friends-of-pooly/nft-auto-rotate-sol/badge.svg?branch=master)](https://coveralls.io/github/friends-of-pooly/nft-auto-rotate-sol?branch=master) ![Tests](https://github.com/friends-of-pooly/nft-auto-rotate-sol/actions/workflows/main.yml/badge.svg)
+The Auto-Rotating NFT a.k.a Pooly "Magic" PFP will be an automatically updating NFT to showcase FoP Artists.
+
+**what:** auto-rotating profile picture <br/>
+**why:** showcase community artists <br/>
+**how:** on-chain ERC721 metadata generation  <br/>
+
+## Getting Involved
+
+Experiments are an opportunity for the Friends of Pooly community to get involved, learn and have some fun.
+
+**Step 1:** Join the Discord </br>
+**Step 2:** Find the #birb-headquarters channel </br>
+**Step 3:** Introduce Yourself to friends of Pooly </br>
+
+[<img width="200px" src="https://user-images.githubusercontent.com/3408362/174302052-6757cf66-f454-4298-b150-2df023ab69e8.png"/>](https://discord.gg/fXJg8C3gd8)
+
+Contributors will be highlighted across the Friends of Pooly communication channels.
 
 # Overview
 
