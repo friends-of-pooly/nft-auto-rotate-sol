@@ -1,39 +1,55 @@
-<p align="center">
-  <a href="https://github.com/pooltogether/pooltogether--brand-assets">
-    <img src="https://github.com/pooltogether/pooltogether--brand-assets/blob/977e03604c49c63314450b5d432fe57d34747c66/logo/pooltogether-logo--purple-gradient.png?raw=true" alt="PoolTogether Brand" style="max-width:100%;" width="200">
-  </a>
-</p>
+# Experiment: Auto-Rotating NFT
 
-<br />
+[![Coverage Status](https://coveralls.io/repos/github/friends-of-pooly/nft-auto-rotate-sol/badge.svg?branch=master)](https://coveralls.io/github/friends-of-pooly/nft-auto-rotate-sol?branch=master)
 
-# PoolTogether Contracts Template
+![Tests](https://github.com/friends-of-pooly/nft-auto-rotate-sol/actions/workflows/main.yml/badge.svg)
 
-[![Coverage Status](https://coveralls.io/repos/github/pooltogether/pooltogether-contracts-template/badge.svg?branch=master)](https://coveralls.io/github/pooltogether/pooltogether-contracts-template?branch=master)
+# Overview
 
-![Tests](https://github.com/pooltogether/pooltogether-contracts-template/actions/workflows/main.yml/badge.svg)
+The Auto-Rotating NFT experiment will test rotating on-chain NFT metadata descriptors.
 
-# Usage
+### Why
 
-1. Clone this repo: `git clone git@github.com:pooltogether/pooltogether-contracts-template.git <DESTINATION REPO>`
-1. Create repo using Github GUI
-1. Set remote repo (`git remote add origin git@github.com:pooltogether/<NAME_OF_NEW_REPO>.git`),
-1. Checkout a new branch (`git checkout -b name_of_new_branch`)
-1. Begin implementing as appropriate.
-1. Update this README
+The Friends of Pooly recently had a PFP contest. Several artists contributed art to the FoP assets collection. It would be great to showcase artist with contributions with a Friends of Pooly NFT that automatically rotates to a new artist submission.
 
-## Usage
+### How
 
-This repo is setup to compile (`nvm use && yarn compile`) and successfully pass tests (`yarn test`)
+NFT can generate item `metadata` completely on-chain; compared to the more commonly IPFS or centralized server approach to store the information.
 
-# Preset Packages
+By generating the NFT metadata on-chain it's possible to rotate the image using `blockNumber` or `timestamp`.
 
-## Generic Proxy Factory
+Using this approach new FoP artists submissions can be automatically featured without requiring a transaction to update the blockchain.
 
-The minimal proxy factory is a powerful pattern used throughout PoolTogethers smart contracts. A [typescript package](https://www.npmjs.com/package/@pooltogether/pooltogether-proxy-factory-package) is available to use a generic deployed instance. This is typically used in the deployment script.
+**Example**
 
-## Generic Registry
+```sol
+function constructTokenURI(uint256 _tokenId) public view returns (string memory) {
+  /// @dev A different image should be returned depending on the timestamp
+  ///      An array of IPFS hashes (or encoded on-chain SVGs) is stored.
+  string memory image = generateSVGImage(_tokenId, block.timestamp);
 
-The [generic registry](https://www.npmjs.com/package/@pooltogether/pooltogether-generic-registry) is a iterable singly linked list data structure that is commonly used throughout PoolTogethers contracts. Consider using this where appropriate or deploying in a seperate repo such as the (Prize Pool Registry)[https://github.com/pooltogether/pooltogether-prizepool-registry.
+  return
+    string(
+      abi.encodePacked(
+        "data:application/json;base64,",
+        Base64.encode(
+          bytes(
+            abi.encodePacked(
+              '{"name":"',
+              params.name,
+              '", "description":"',
+              params.description,
+              '", "image": "',
+              image,
+              '"}'
+            )
+          )
+        )
+      )
+    );
+}
+
+```
 
 # Installation
 
