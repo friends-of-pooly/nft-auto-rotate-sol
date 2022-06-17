@@ -5,8 +5,8 @@ import { ethers } from 'hardhat';
 import { Interface } from 'ethers/lib/utils';
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
 
-describe('Test Set Name', () => {
-  let exampleContract: Contract;
+describe('AutoRotateNFT', () => {
+  let AutoRotateNFTContract: Contract;
 
   let wallet1: SignerWithAddress,
     wallet2: SignerWithAddress,
@@ -19,17 +19,11 @@ describe('Test Set Name', () => {
     const exampleContractFactory: ContractFactory = await ethers.getContractFactory(
       'ExampleContract',
     );
-    exampleContract = await exampleContractFactory.deploy();
+    AutoRotateNFTContract = await exampleContractFactory.deploy();
   });
+
   describe('callMeSometime()', () => {
-    it('Test Name', async () => {
-      await expect(exampleContract.callMe()).to.emit(exampleContract, 'ReallyCoolEvent');
-    });
+    
   });
-  describe('get Owner', () => {
-    it('Test Name', async () => {
-      expect(await exampleContract.owner()).to.equal(wallet1.address);
-      expect(await exampleContract.connect(wallet2).owner()).to.not.equal(wallet2.address);
-    });
-  });
+
 });

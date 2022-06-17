@@ -1,11 +1,8 @@
 ![banner-auto-rotating-nft](https://user-images.githubusercontent.com/3408362/174283301-16c309c5-f7cb-4c01-872c-144979b99658.png)
 
-
 # Experiment: Auto-Rotating NFT
 
-[![Coverage Status](https://coveralls.io/repos/github/friends-of-pooly/nft-auto-rotate-sol/badge.svg?branch=master)](https://coveralls.io/github/friends-of-pooly/nft-auto-rotate-sol?branch=master)
-
-![Tests](https://github.com/friends-of-pooly/nft-auto-rotate-sol/actions/workflows/main.yml/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/friends-of-pooly/nft-auto-rotate-sol/badge.svg?branch=master)](https://coveralls.io/github/friends-of-pooly/nft-auto-rotate-sol?branch=master) ![Tests](https://github.com/friends-of-pooly/nft-auto-rotate-sol/actions/workflows/main.yml/badge.svg)
 
 # Overview
 
@@ -24,11 +21,13 @@ By generating the NFT metadata on-chain it's possible to rotate the image using 
 Using this approach new FoP artists submissions can be automatically featured without requiring a transaction to update the blockchain.
 
 ### App Design Example
+
 The app design below is a simple sketch of what the rotating UI could look like. Coding the user interface is not required right now, but is included as an example for what it might look like in the future.
 
 <img width="500px" src="https://user-images.githubusercontent.com/3408362/174283691-4758e4c5-87ea-47c6-90cc-4a5d43ea9ac8.png" />
 
 ### Code Example:
+
 The code snippets below provide a rough outline for having automatically rotating images in an NFT.
 
 ```sol
@@ -57,6 +56,7 @@ function constructTokenURI(uint256 _tokenId) public view returns (string memory)
       )
     );
 }
+
 ```
 
 # Installation

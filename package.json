@@ -53,8 +53,7 @@
     "husky": "8.0.1",
     "prettier": "2.5.1",
     "prettier-plugin-solidity": "1.0.0-beta.19",
-    "solc": "0.8.6",
-    "solc-0.8": "npm:solc@0.8.6solc",
+    "solc": "0.8.14",
     "solhint": "3.3.6",
     "solidity-coverage": "0.7.18",
     "solidity-docgen": "0.5.16",
@@ -72,6 +71,7 @@
     "deploy/**"
   ],
   "dependencies": {
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "base64-sol": "^1.1.0"
   }
 }
