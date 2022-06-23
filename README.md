@@ -159,6 +159,14 @@ const tokenId = 1034;
 const { uri, artist } = await autoRotateNFTContract.imageAtBlock(tokenId, oneWeekFromNow);
 ```
 
+## Locking the NFT images
+
+If the images on the contract not longer need to be pushed or updated, then the contract owner can perma-lock the current image information with the `permaLockImages()` function:
+
+```ts
+await autoRotateNFTContract.connect(owner).permaLockImages();
+```
+
 # Installation
 
 Install the repo and dependencies by running:

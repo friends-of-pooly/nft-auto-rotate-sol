@@ -58,6 +58,7 @@ describe('AutoRotateNFT', () => {
     NOT_CONTRACT_OWNER: 'Ownable: caller is not the owner',
     ZERO_BLOCK_DURATION: 'AutoRotateNFT: zero block duration',
     NOT_APPROVED_OR_OWN: 'AutoRotateNFT: token is not approved or own',
+    IMAGE_LOCK_ENGAGED: 'AutoRotateNFT: images are perma-locked',
   };
 
   // Helper function to add test image data:
@@ -120,6 +121,14 @@ describe('AutoRotateNFT', () => {
       expect(event.args?.imageData?.uri).to.equal(images[0].uri);
       expect(event.args?.imageData?.artist).to.equal(images[0].artist);
     });
+
+    it('should NOT allow a push to occur when image-locked', async () => {
+      const owner = wallet1;
+      await AutoRotateNFTContract.connect(owner).permaLockImages();
+      await expect(
+        AutoRotateNFTContract.connect(owner).pushImage(images[0].uri, images[0].artist),
+      ).to.be.revertedWith(ERROR.IMAGE_LOCK_ENGAGED);
+    });
   });
 
   describe('updateImage()', () => {
@@ -146,6 +155,14 @@ describe('AutoRotateNFT', () => {
       await expect(
         AutoRotateNFTContract.connect(nonOwner).updateImage(0, '', ''),
       ).to.be.revertedWith(ERROR.NOT_CONTRACT_OWNER);
+    });
+
+    it('should NOT allow an update to occur when image-locked', async () => {
+      const owner = wallet1;
+      await AutoRotateNFTContract.connect(owner).permaLockImages();
+      await expect(AutoRotateNFTContract.connect(owner).updateImage(0, '', '')).to.be.revertedWith(
+        ERROR.IMAGE_LOCK_ENGAGED,
+      );
     });
   });
 
@@ -534,6 +551,41 @@ describe('AutoRotateNFT', () => {
         expect(uri).to.equal(images[images.length - 1].uri);
         expect(artist).to.equal(images[images.length - 1].artist);
       }
+    });
+  });
+
+  describe('imagePermaLock', () => {
+    it('should be false by default', async () => {
+      expect(await AutoRotateNFTContract.imagePermaLock()).to.be.false;
+    });
+
+    it('should be true after engaged', async () => {
+      const owner = wallet1;
+      await AutoRotateNFTContract.connect(owner).permaLockImages();
+      expect(await AutoRotateNFTContract.imagePermaLock()).to.be.true;
+    });
+  });
+
+  describe('permaLockImages()', () => {
+    it('should be callable by the contract owner', async () => {
+      const owner = wallet1;
+      await expect(AutoRotateNFTContract.connect(owner).permaLockImages()).to.not.be.reverted;
+    });
+
+    it('should NOT be callable by a non-owner', async () => {
+      const nonOwner = wallet2;
+      await expect(AutoRotateNFTContract.connect(nonOwner).permaLockImages()).to.be.revertedWith(
+        ERROR.NOT_CONTRACT_OWNER,
+      );
+    });
+
+    it('should NOT be able to be called when image lock is already engaged', async () => {
+      const owner = wallet1;
+      await AutoRotateNFTContract.connect(owner).permaLockImages();
+      expect(await AutoRotateNFTContract.imagePermaLock()).to.be.true;
+      await expect(AutoRotateNFTContract.connect(owner).permaLockImages()).to.be.revertedWith(
+        ERROR.IMAGE_LOCK_ENGAGED,
+      );
     });
   });
 });

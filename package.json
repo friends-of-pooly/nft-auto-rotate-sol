@@ -1,6 +1,6 @@
 {
   "name": "@friends-of-pooly/nft-auto-rotate-sol",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Auto-rotating NFTs using dynamic on-chain metadata generation.",
   "main": "index.js",
   "license": "GPL-3.0",

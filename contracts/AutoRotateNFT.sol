@@ -50,6 +50,9 @@ contract AutoRotateNFT is ERC721, Ownable {
   uint16 private _currentImageIndex;
   mapping(uint16 => ImageData) private _imageData;
 
+  // Image perma-lock (prevents any more images being pushed or changed):
+  bool public imagePermaLock = false;
+
   /* ================================================================================ */
   /* Constructor                                                                      */
   /* ================================================================================ */
@@ -65,6 +68,14 @@ contract AutoRotateNFT is ERC721, Ownable {
    */
   modifier imageExists(uint16 _index) {
     require(_index < numImages(), "AutoRotateNFT: index out-of-bounds");
+    _;
+  }
+
+  /**
+   * Requires that the image lock is false.
+   */
+  modifier notImageLocked() {
+    require(!imagePermaLock, "AutoRotateNFT: images are perma-locked");
     _;
   }
 
@@ -169,7 +180,11 @@ contract AutoRotateNFT is ERC721, Ownable {
   /**
    * Pushes new image data onto the image list.
    */
-  function pushImage(string calldata _uri, string calldata _artist) external onlyOwner {
+  function pushImage(string calldata _uri, string calldata _artist)
+    external
+    onlyOwner
+    notImageLocked
+  {
     // Add new image data:
     uint16 _nextIndex = _currentImageIndex++;
     _imageData[_nextIndex].uri = _uri;
@@ -186,7 +201,7 @@ contract AutoRotateNFT is ERC721, Ownable {
     uint16 _index,
     string calldata _uri,
     string calldata _artist
-  ) external onlyOwner imageExists(_index) {
+  ) external onlyOwner imageExists(_index) notImageLocked {
     // Update image data:
     _imageData[_index].uri = _uri;
     _imageData[_index].artist = _artist;
@@ -260,5 +275,12 @@ contract AutoRotateNFT is ERC721, Ownable {
     _tokenSettings[_tokenId].imageOffset = _imageOffset;
     _tokenSettings[_tokenId].useMostRecent = _useMostRecent;
     _tokenSettings[_tokenId].useCustomSettings = _useCustomSettings;
+  }
+
+  /**
+   * Engages the image perma-lock if contract owner.
+   */
+  function permaLockImages() external onlyOwner notImageLocked {
+    imagePermaLock = true;
   }
 }
