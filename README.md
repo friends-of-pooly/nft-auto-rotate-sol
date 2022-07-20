@@ -34,67 +34,137 @@ NFTs can generate item `metadata` completely on-chain; compared to the more comm
 
 By generating the NFT metadata on-chain it's possible to rotate the image using blocknumber and/or timestamps.
 
-## Getting Involved
+# Implementation
 
-Experiments are an opportunity for the Friends of Pooly community to get involved, learn and have some fun.
+The AutoRotateNFT.sol contract in this repo implements the above functionality and more with a dynamic artwork list and per-token customizable parameters that allow each holder of the "Magic Pooly PFP" to control how often their own profile picture changes and even allows a holder to lock it to their favorite image or always display the most recent profile addition if they wish to.
 
-**Step 1:** Join the Discord </br>
-**Step 2:** Find the #birb-headquarters channel </br>
-**Step 3:** Introduce Yourself to friends of Pooly </br>
+The following code examples demonstrate the setup and typical usage of the contract:
 
-[<img width="200px" src="https://user-images.githubusercontent.com/3408362/174302052-6757cf66-f454-4298-b150-2df023ab69e8.png"/>](https://discord.gg/fXJg8C3gd8)
+## Setup
 
-Contributors will be highlighted across the Friends of Pooly communication channels.
+To setup the contract after it has been deployed, the starting list of profile pictures should be added by using the `pushImage(string _uri, string _artist)` function. The following ethers code will push image data to the list:
 
-### App Design Example
+```ts
+// Image URI's can be any valid image URI as defined in the ERC721 Metadata JSON Schema
+const imageURI = "ipfs://QmPm1hiVsZRUwEBCuaUCpxzRaRdhQ6Ys5S6fn8XfNdcM8R/IMG_0405.png";
 
-The app design below is a simple sketch of what the rotating UI could look like. Coding the user interface is not required right now, but is included as an example for what it might look like in the future.
+// The artist field is any extra string that best describes the artist. We will use a twitter handle in this example.
+const artist = "@artmilitonian";
 
-<img width="500px" src="https://user-images.githubusercontent.com/3408362/174283691-4758e4c5-87ea-47c6-90cc-4a5d43ea9ac8.png" />
+// Connect the owner of the contract and use the `pushImage` function to push the data onto the image list:
+await autoRotateNFTContract.connect(signer).pushImage(imageURI, artist);
+```
 
-### Code Example:
+There are three default image rotation parameters that can also be changed:
 
-The code snippets below provide a rough outline for having automatically rotating images in an NFT.
+```ts
+/**
+ * The following will change the `defaultBlockDuration` value which defines how many blocks will 
+ * elapse before the profile picture will change.
+ * 
+ * Here we use a value of 5760 which would be approximately once every day on ethereum mainnet.
+ */
+await autoRotateNFTContract.connect(signer).setDefaultBlockDuration(5760);
 
-```sol
-function tokenURI(uint256 tokenId) public view override returns (string memory) {
-  return constructTokenURI(tokenId);
-}
+/**
+ * The next line will change the `defaultImageOffset` value which allows the schedule to be shifted 
+ * forward. For example, if an offset of `1` is provided and the 1st image is supposed to be 
+ * displayed at this time, the 2nd image will be displayed instead.
+ * 
+ * Here we will set the offset to `0`.
+ */
+await autoRotateNFTContract.connect(signer).setDefaultImageOffset(0);
 
-function constructTokenURI(uint256 _tokenId) public view returns (string memory) {
-  string memory name = string(abi.encodePacked("Pooly Rotating"));
-  string memory description = string(abi.encodePacked("#", _tokenId.toString()));
+/**
+ * Finally, we can also change the `defaultUseMostRecent` boolean value which allows use to specify 
+ * whether the most recently added profile picture should be displayed at all times or not. If this 
+ * is set to true, then the block duration and image offsets provided will not affect the displayed
+ * image.
+ * 
+ * Here we will set the value to `false` to allow the default behavior to be image rotation.
+ */
+await autoRotateNFTContract.connect(signer).setDefaultUseMostRecent(false);
 
-  /**
-   * The generateImage function could return a different image URI depending
-   * on the tokenId and blocknumber. A timestamp could also work.
-   */
-  string memory image = generateImage(_tokenId, block.number);
+/**
+ * NOTE: all of these default values can be overridden on a per-token basis as described later.
+ */
+```
 
-  return
-    string(
-      abi.encodePacked(
-        "data:application/json;base64,",
-        Base64.encode(
-          bytes(
-            abi.encodePacked(
-              '{"name":"',
-              name,
-              '", "description":"',
-              description,
-              '", "image": "',
-              "data:image/svg+xml;base64,",
-              image,
-              '"}'
-            )
-          )
-        )
-      )
-    );
-}
+## Updating Image Data
 
-function generateImage(uint256 _tokenId, uint256 blockNumber) public view returns (string memory) {}
+Since adding images to the list may become a weekly event, it is entirely likely that a mistake or typo may occur and the wrong image data is added to the image list. To prevent this from breaking or ruining the experience of the token, an option to update image data has been added. This can only be done by the owner of the contract.
 
+The following demonstrates how to update existing image data:
+
+```ts
+const targetIndex = 0;
+const newImageURI = "{ new URI }";
+const newImageArtist = "{ new artist descriptor }";
+await autoRotateNFTContract.connect(signer).updateImage(targetIndex, newImageURI, newImageArtist);
+```
+
+## Minting
+
+To mint a token, simply call the mint function with the desired signer:
+
+```ts
+await autoRotateNFTContract.connect(signer).mint();
+```
+
+## Customizing Token Behavior
+
+Each token holder has the option to customize the behavior of their profile picture. The custom settings defined for each token take priority over the default settings for the contract. Only the owner or approved operator of the token can update the token settings.
+
+The following example shows how to make the profile picture of a token change once a day on ethereum mainnet:
+
+```ts
+const myTokenIndex = 1034;
+const blockDuration = 24 * 60 * 4; // blocks occur about 4 times a minute and there are 60 min in an hour and 24 hours in a day
+const imageOffset = 0;
+const useMostRecent = false;
+const useCustomSettings = true;
+await autoRotateNFTContract.connect(signer).updateSettings(myTokenIndex, blockDuration, imageOffset, useMostRecent, useCustomSettings);
+```
+
+Using the imageOffset and blockDuration creatively, we can also display only our favorite image:
+
+```ts
+const myTokenIndex = 1034;
+const blockDuration = (2**32) - 1; // max uint32 value (will change about every 2042 years if current block production continues)
+const imageOffset = 3; // The index of our favorite image
+const useMostRecent = false;
+const useCustomSettings = true;
+await autoRotateNFTContract.connect(signer).updateSettings(myTokenIndex, blockDuration, imageOffset, useMostRecent, useCustomSettings);
+```
+
+We can set our token to always use the most recent profile picture by doing the following:
+
+```ts
+const myTokenIndex = 1034;
+const useMostRecent = true;
+const useCustomSettings = true;
+await autoRotateNFTContract.connect(signer).updateSettings(myTokenIndex, 0, 0, useMostRecent, useCustomSettings);
+```
+
+## Predicting the future
+
+If we want to show the token holder which image will be related to their token on a specific date, we can use the `imageAtBlock` function with their tokenId and the predicted block number of the given date to find the image that will be displayed based off of their current settings (or default settings).
+
+In this example, we find which image will be used one week from now:
+
+```ts
+const now = await provider.getBlockNumber();
+const oneWeekFromNow = now + (7 * 24 * 60 * 4);
+const tokenId = 1034;
+const { uri, artist } = await autoRotateNFTContract.imageAtBlock(tokenId, oneWeekFromNow);
+```
+
+## Locking the NFT images
+
+If the images on the contract not longer need to be pushed or updated, then the contract owner can perma-lock the current image information with the `permaLockImages()` function:
+
+```ts
+await autoRotateNFTContract.connect(owner).permaLockImages();
 ```
 
 # Installation
